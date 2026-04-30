@@ -105,8 +105,8 @@ app.post('/api/chat', async (req, res) => {
 });
 
 // --- ENCENDIDO EN PUERTO 3005 ---
-app.listen(process.env.PORT || 3005, '127.0.0.1', () => {
+app.listen(process.env.PORT || 3005, '0.0.0.0', () => {
     console.log("---------------------------------------");
-    console.log("🚀 SERVIDOR LISTO");
+    console.log("🚀 SERVIDOR LISTO EN RENDER");
     console.log("---------------------------------------");
 });
