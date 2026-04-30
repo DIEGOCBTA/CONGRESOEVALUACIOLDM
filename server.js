@@ -76,8 +76,8 @@ ${CONGRESS_INFO}
 `;
 
 // --- PARTE DE LA IA (BENDER) ---
-if (!process.env.GEMINI_API_KEY) console.log("⚠️ OJO: Revisa tu archivo .ENV");
-const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY || "");
+if (!process.env.GEMINI_API_KEY) console.log("⚠️ Usando API Key de respaldo proporcionada");
+const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY || "AIzaSyD4B62RYBmJ2053JmUxKWVGs8AqlxASWxY");
 // Usamos gemini-1.5-flash
 const model = genAI.getGenerativeModel({ model: "gemini-flash-latest" });
 
