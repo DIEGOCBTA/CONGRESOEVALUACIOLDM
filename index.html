@@ -1,0 +1,1166 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <script>
+        // Si la llave YA existe, ocultamos visualmente la intro y el portal desde el inicio
+        if (localStorage.getItem('form_completado') === 'true') {
+            var style = document.createElement('style');
+            style.innerHTML = `
+            #intro-overlay, #welcome-portal, #choreography-canvas { 
+                display: none !important; 
+                opacity: 0 !important; 
+                pointer-events: none !important;
+            } 
+            body, html { overflow: visible !important; }
+        `;
+            document.head.appendChild(style);
+        }
+    </script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="description"
+        content="VII Congreso Académico Internacional CBTa 197 - Divulgación Científica y Metodología STEAM: Soluciones con Ciencia">
+    <title data-i18n="page.title">VII Congreso Internacional CBTa 197</title>
+
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@400;500;600;700;800&display=swap"
+        rel="stylesheet">
+
+    <!-- Three.js for WebGL -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+
+    <!-- Styles -->
+    <link rel="stylesheet" href="main.css">
+    <link rel="stylesheet" href="gradual-blur.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/lottie-web/5.12.2/lottie.min.js"></script>
+
+</head>
+
+<body>
+    <div id="intro-overlay">
+        <canvas id="choreography-canvas"></canvas>
+        <div id="final-logo-container">
+            <!-- Updated to new Congress Logo -->
+            <img src="logoloading.png" id="sacred-logo" alt="Logo Final">
+            <div class="logo-aura"></div>
+        </div>
+        <div class="intro-center-container">
+            <h1 id="msg-1" class="text-msg" data-i18n="portal.welcome">BIENVENIDO</h1>
+            <h1 id="msg-2" class="text-msg" data-i18n="portal.ready"> ¿ESTAS LISTO? </h1>
+            <h1 id="msg-3" class="text-msg" data-i18n="portal.starting">INICIANDO</h1>
+        </div>
+    </div>
+
+
+    <!-- WebGL Shader Background Canvas -->
+    <canvas id="webgl-canvas" class="webgl-background"></canvas>
+
+    <!-- Floating Particles Background -->
+    <div class="particles-container">
+        <div class="particle"></div>
+        <div class="particle"></div>
+        <div class="particle"></div>
+        <div class="particle"></div>
+        <div class="particle"></div>
+        <div class="particle"></div>
+        <div class="particle"></div>
+        <div class="particle"></div>
+    </div>
+
+    <!-- Navigation -->
+    <nav class="nav-bar">
+        <div class="nav-logo">
+            <!-- Updated Navbar Logo with SVG -->
+            <svg class="nav-logo-svg" version="1.0" xmlns="http://www.w3.org/2000/svg" width="40" height="40"
+                viewBox="0 0 500.000000 500.000000" preserveAspectRatio="xMidYMid meet">
+                <g transform="translate(0.000000,500.000000) scale(0.100000,-0.100000)" fill="currentColor"
+                    stroke="none">
+                    <path
+                        d="M2542 4620 c-256 -5 -275 -6 -288 -24 -21 -29 -18 -89 6 -116 31 -36 43 -90 25 -117 -20 -30 -19 -53 3 -69 41 -31 97 -11 106 40 4 19 16 46 28 61 25 32 8 55 -39 55 -54 0 -103 50 -103 105 0 13 197 29 226 18 14 -5 15 -14 9 -62 -11 -76 -7 -159 8 -190 11 -22 18 -25 72 -26 33 -1 78 -7 100 -13 87 -25 175 -1 175 48 0 5 14 10 30 10 28 0 30 -2 30 -39 0 -61 29 -90 72 -71 33 14 112 18 142 7 12 -5 16 -20 16 -62 0 -39 4 -55 13 -55 15 0 47 31 47 46 0 15 62 169 70 174 14 9 17 115 4 128 -7 7 -40 12 -72 12 -51 0 -62 3 -77 24 -17 22 -24 24 -67 19 -44 -5 -48 -4 -57 19 -26 68 -121 47 -121 -27 0 -23 -21 -55 -57 -87 -23 -21 -33 -39 -35 -66 -3 -41 -32 -51 -105 -37 -32 6 -33 7 -33 55 0 32 5 54 15 62 9 7 22 19 30 26 7 6 23 12 34 12 27 0 27 21 1 40 -37 27 -25 47 31 52 59 6 78 20 59 43 -7 8 -15 14 -19 13 -3 -1 -129 -5 -279 -8z m107 -31 c35 -12 44 -56 16 -79 -8 -7 -15 -19 -15 -26 0 -19 -47 -29 -65 -14 -7 6 -11 18 -8 26 3 8 0 14 -6 14 -21 0 -12 58 11 74 27 19 27 19 67 5z" />
+                    <path
+                        d="M1956 4501 c-3 -5 -18 -12 -33 -16 -108 -27 -500 -311 -582 -423 -37 -49 -51 -67 -77 -97 -14 -16 -33 -41 -42 -55 -9 -14 -30 -43 -48 -65 -17 -22 -46 -71 -64 -110 -19 -38 -39 -77 -45 -85 -14 -19 -46 -101 -83 -215 -27 -83 -39 -129 -74 -275 -25 -104 -16 -481 15 -630 25 -117 78 -291 96 -314 5 -6 14 -29 21 -51 60 -194 336 -545 533 -679 21 -15 42 -26 46 -26 5 0 11 -7 15 -15 3 -8 12 -15 21 -15 8 0 15 -4 15 -10 0 -5 26 -23 58 -40 240 -126 412 -190 511 -190 42 0 67 -5 77 -15 16 -16 100 -21 121 -7 9 6 13 55 14 170 1 148 3 162 19 162 10 0 23 -13 30 -29 10 -25 15 -28 30 -19 37 23 46 -6 45 -146 0 -107 3 -130 16 -139 21 -13 104 0 124 19 11 11 26 14 57 9 64 -10 299 70 436 148 110 63 216 129 242 153 8 7 30 26 49 41 42 35 136 129 176 177 17 20 43 51 58 68 86 99 227 352 275 493 75 220 88 292 99 538 5 131 -7 316 -27 397 -44 178 -122 417 -141 430 -4 3 -11 22 -17 43 -6 21 -52 97 -103 170 -103 147 -110 155 -226 274 -46 46 -83 88 -83 93 0 6 -7 10 -15 10 -8 0 -15 4 -15 8 0 4 -14 16 -30 26 -41 24 -54 11 -70 -66 l-12 -62 30 -26 c98 -84 126 -115 213 -231 94 -126 132 -181 146 -212 7 -16 22 -40 33 -54 11 -14 20 -32 20 -39 0 -8 9 -33 19 -57 11 -23 27 -69 36 -102 10 -33 23 -78 30 -100 64 -194 72 -668 15 -850 -12 -38 -29 -92 -37 -120 -25 -81 -75 -205 -84 -205 -4 0 -13 -17 -20 -37 -6 -21 -15 -40 -18 -43 -4 -3 -20 -27 -35 -54 -16 -27 -44 -65 -62 -86 -19 -21 -34 -41 -34 -46 0 -13 -67 -84 -79 -84 -6 0 -11 -6 -11 -12 -1 -25 -223 -214 -297 -251 -17 -9 -37 -22 -45 -30 -39 -37 -380 -167 -441 -167 l-33 0 -12 128 c-7 70 -12 182 -12 250 0 68 -4 153 -10 190 -5 37 -11 252 -14 477 -5 476 -2 415 -25 415 -30 0 -51 -43 -51 -105 0 -47 -3 -55 -19 -55 -18 0 -34 60 -29 110 4 39 -3 50 -27 50 -32 0 -47 -36 -44 -105 3 -40 0 -51 -14 -53 -15 -3 -14 -6 3 -25 11 -11 21 -32 21 -46 4 -77 3 -119 -3 -115 -6 4 -21 -64 -17 -82 7 -37 -2 -55 -23 -49 -19 6 -21 5 -10 -6 21 -22 14 -46 -18 -58 -16 -5 -30 -15 -30 -20 0 -6 -6 -8 -14 -5 -11 4 -15 -24 -20 -148 -4 -84 -12 -205 -17 -268 -5 -63 -9 -178 -10 -255 -2 -252 -9 -268 -100 -226 -24 11 -89 35 -144 54 -309 107 -582 310 -745 552 -19 28 -36 52 -39 55 -9 8 -37 60 -62 113 -12 26 -25 47 -30 47 -5 0 -9 9 -9 20 0 12 -7 35 -16 52 -29 56 -55 141 -78 253 -16 77 -27 110 -37 110 -8 0 -13 8 -13 18 1 9 -2 15 -6 12 -18 -11 -45 81 -45 151 0 60 4 78 24 104 19 26 25 51 31 129 34 399 182 747 415 976 23 22 52 54 66 71 13 16 55 54 92 83 37 29 67 56 67 59 0 4 13 13 29 20 16 7 41 24 55 37 15 14 37 27 50 31 13 3 33 14 44 24 11 11 41 25 66 31 25 6 46 15 46 20 0 5 9 9 20 9 17 0 20 7 20 40 0 72 -42 137 -64 101z m534 -1896 c0 -3 -2 -5 -5 -5 -3 0 -5 2 -5 5 0 3 2 5 5 5 3 0 5 -2 5 -5z m17 -152 c-4 -3 -7 0 -7 7 0 7 3 10 7 7 3 -4 3 -10 0 -14z m89 -20 c7 -39 -1 -208 -12 -236 -15 -40 -42 -19 -50 40 -7 56 0 186 12 217 12 31 43 19 50 -21z m-176 -198 c0 -3 -2 -5 -5 -5 -3 0 -5 2 -5 5 0 3 2 5 5 5 3 0 5 -2 5 -5z m60 -135 c0 -85 -3 -119 -12 -122 -9 -3 -12 -26 -10 -76 3 -74 -15 -107 -40 -71 -12 19 -2 353 12 357 5 2 10 10 10 17 0 14 20 25 33 18 4 -2 7 -58 7 -123z m103 -4 c18 -14 24 -71 7 -81 -6 -3 -10 -50 -10 -105 0 -55 4 -102 10 -105 16 -10 12 -114 -4 -131 -42 -41 -60 2 -52 121 2 39 4 125 5 193 1 127 5 137 44 108z m-123 -325 c5 -11 10 -33 10 -50 0 -45 -45 -45 -55 -1 -13 58 21 96 45 51z m120 -250 c0 -30 -4 -39 -15 -37 -9 1 -15 5 -15 9 0 4 0 21 0 37 0 20 5 30 15 30 11 0 15 -11 15 -39z" />
+                    <path
+                        d="M2810 4060 c0 -27 3 -30 33 -30 39 0 90 -30 114 -67 24 -37 39 -53 52 -53 36 0 -41 105 -113 154 -54 37 -86 35 -86 -4z" />
+                    <path
+                        d="M2071 4059 c-39 -19 -50 -20 -100 -10 -98 19 -180 -26 -228 -126 -12 -25 -25 -35 -57 -44 -87 -23 -178 -144 -198 -263 -2 -12 -26 -30 -60 -48 -39 -20 -58 -35 -58 -48 0 -10 -7 -20 -14 -23 -19 -8 -34 -63 -42 -157 -6 -67 -10 -78 -38 -106 -66 -65 -71 -74 -74 -159 -2 -44 -9 -84 -15 -90 -51 -43 -72 -98 -75 -194 -4 -110 8 -148 64 -211 30 -33 37 -50 44 -102 29 -220 138 -343 312 -353 63 -4 89 -10 108 -25 67 -53 75 -55 240 -52 151 3 156 4 212 34 32 17 58 35 58 39 0 5 7 9 15 9 8 0 15 6 15 14 0 7 12 22 26 32 14 10 32 25 39 32 8 6 16 12 20 12 3 0 16 9 28 21 21 19 22 28 25 247 4 287 2 307 -43 328 -19 9 -39 22 -46 30 -6 8 -19 14 -29 14 -21 0 -80 64 -80 85 0 8 -4 15 -9 15 -16 0 -33 120 -26 186 7 63 7 64 -21 76 -16 7 -38 21 -48 30 -11 10 -23 18 -26 18 -30 0 -40 146 -15 207 27 64 1 153 -45 153 -5 0 -10 9 -10 19 0 11 -3 21 -7 23 -32 13 -62 198 -33 198 6 0 10 7 10 15 0 8 5 15 10 15 6 0 10 8 10 19 0 15 10 20 49 25 60 8 89 -3 118 -42 16 -21 36 -33 73 -42 27 -7 53 -17 58 -24 4 -6 20 -18 36 -26 16 -8 31 -23 34 -32 5 -22 25 -23 42 -4 17 21 19 208 2 214 -7 2 -19 17 -28 34 -30 58 -139 76 -223 37z m-321 -328 c0 -10 -7 -22 -15 -25 -41 -15 -76 -176 -39 -176 9 0 18 -9 21 -20 3 -11 9 -20 14 -20 41 0 50 -135 14 -195 -39 -63 -35 -131 10 -174 27 -25 35 -41 35 -67 0 -19 9 -52 20 -72 17 -32 60 -128 71 -157 39 -103 104 -165 174 -165 73 0 80 -17 39 -95 -30 -55 -35 -61 -84 -95 -78 -55 -244 -19 -325 71 -19 20 -65 27 -65 9 0 -5 -24 -25 -52 -44 -29 -20 -62 -42 -73 -50 -42 -29 -65 -30 -65 -1 0 15 7 28 18 32 9 4 22 14 29 23 6 9 29 24 51 34 101 45 63 110 -70 119 -128 8 -158 31 -177 132 -19 102 -15 135 15 135 24 0 25 -2 23 -57 -2 -40 2 -68 14 -88 36 -65 39 -67 142 -74 75 -6 102 -12 125 -29 16 -12 34 -22 39 -22 6 0 23 -16 38 -35 52 -66 170 -135 231 -135 35 0 111 50 118 79 7 25 -25 60 -54 61 -31 0 -107 96 -142 175 -18 44 -47 99 -62 122 -16 24 -31 63 -35 90 -4 29 -17 62 -34 83 -46 60 -47 168 0 231 31 41 22 129 -15 143 -8 3 -14 13 -14 22 0 9 -7 22 -15 28 -37 27 -25 148 18 187 12 11 27 24 32 29 18 16 45 11 45 -9z m-200 -446 c0 -36 -29 -85 -51 -85 -32 0 -21 89 14 112 17 11 37 -3 37 -27z m-92 -252 c13 -24 30 -43 37 -43 7 0 15 -4 17 -8 6 -14 110 -52 144 -52 27 0 34 -4 34 -20 0 -61 -189 -20 -232 50 -7 11 -18 20 -25 20 -7 0 -13 4 -13 8 0 5 -9 19 -19 31 -24 28 -17 63 13 59 12 -2 30 -20 44 -45z m825 -536 c-3 -97 -55 -159 -148 -176 -28 -5 -55 -17 -62 -28 -39 -55 -50 -66 -81 -79 -65 -27 -182 -11 -224 30 -54 52 -133 82 -183 68 -25 -6 -54 -12 -65 -12 -11 0 -20 -4 -20 -10 0 -11 -30 -13 -54 -4 -30 12 -18 34 19 34 19 0 35 4 35 8 0 9 55 35 97 47 33 9 111 -15 136 -42 40 -44 130 -83 192 -83 30 0 55 3 55 8 0 4 11 20 25 36 14 16 25 33 25 37 0 14 57 39 88 39 55 0 94 38 121 118 29 85 47 89 44 9z" />
+                    <path d="M3024 3879 c-3 -6 -1 -16 5 -22 8 -8 11 -5 11 11 0 24 -5 28 -16 11z" />
+                    <path
+                        d="M1930 3865 c-25 -30 1 -161 38 -190 105 -83 111 -101 67 -196 -57 -125 -29 -203 77 -215 67 -8 100 17 113 84 11 57 23 76 42 61 42 -36 -34 -199 -93 -199 -8 0 -13 -3 -12 -7 1 -5 -6 -22 -15 -40 -24 -46 -22 -115 7 -171 30 -60 107 -132 139 -132 l25 0 7 349 c7 337 -4 537 -25 475 -6 -16 -10 -14 -25 16 -27 54 -78 93 -145 113 -36 10 -60 23 -60 31 0 31 -117 49 -140 21z" />
+                    <path d="M3080 3744 c0 -8 5 -12 10 -9 6 4 8 11 5 16 -9 14 -15 11 -15 -7z" />
+                    <path
+                        d="M3350 3648 c-39 -11 -113 -25 -180 -35 -25 -3 -49 -12 -55 -19 -5 -7 -36 -20 -67 -29 -32 -9 -58 -21 -58 -26 0 -5 -3 -8 -7 -7 -5 0 -15 -1 -23 -5 -8 -3 -27 -8 -42 -11 -15 -3 -33 -12 -40 -19 -7 -8 -26 -17 -41 -21 -36 -9 -38 -46 -2 -46 13 0 28 6 32 13 8 13 222 97 247 97 8 0 17 -10 21 -22 7 -22 7 -22 14 6 11 53 232 96 386 76 39 -5 73 -9 77 -10 4 0 23 -14 42 -31 44 -38 53 -81 36 -167 -16 -81 -36 -102 -94 -102 -65 0 -106 -38 -106 -100 0 -81 5 -88 68 -96 100 -12 141 37 120 144 -10 48 -9 56 10 80 62 77 77 158 43 235 -11 26 -27 47 -35 47 -8 0 -21 6 -28 13 -41 40 -227 61 -318 35z" />
+                    <path d="M3152 3450 c0 -14 2 -19 5 -12 2 6 2 18 0 25 -3 6 -5 1 -5 -13z" />
+                    <path d="M3160 3371 c0 -25 6 -27 13 -6 4 8 2 17 -3 20 -6 4 -10 -3 -10 -14z" />
+                    <path
+                        d="M3170 3280 c-10 -28 1 -490 11 -484 5 3 7 14 4 25 -4 10 -3 19 2 19 4 0 8 90 8 200 0 110 -3 200 -7 200 -4 0 -8 12 -10 28 -2 16 -5 21 -8 12z" />
+                    <path
+                        d="M2810 3034 l0 -236 37 7 c70 13 163 79 163 116 0 6 7 17 15 25 28 28 15 214 -15 214 -4 0 -12 11 -18 24 -14 31 -111 86 -151 86 l-31 0 0 -236z" />
+                    <path d="M3440 3040 c0 -11 5 -20 10 -20 6 0 10 9 10 20 0 11 -4 20 -10 20 -5 0 -10 -9 -10 -20z" />
+                    <path d="M3650 2825 c0 -3 2 -5 5 -5 3 0 5 2 5 5 0 3 -2 5 -5 5 -3 0 -5 -2 -5 -5z" />
+                    <path
+                        d="M3650 2792 c0 -11 7 -28 15 -36 20 -20 39 -126 31 -170 -19 -102 -189 -143 -407 -96 -147 31 -139 27 -140 63 0 30 -1 31 -11 10 -13 -28 -20 -28 -89 -4 -111 38 -155 57 -179 74 -13 9 -33 17 -43 17 -28 0 -18 -44 11 -48 12 -2 22 -8 22 -13 0 -5 7 -9 14 -9 8 0 36 -11 62 -25 26 -14 65 -28 86 -31 21 -4 38 -10 38 -14 0 -4 14 -10 30 -13 17 -4 30 -13 30 -20 0 -9 9 -12 29 -9 16 2 39 -3 52 -11 32 -20 231 -41 328 -34 171 11 244 95 206 237 -9 36 -25 74 -36 86 -10 11 -19 25 -19 31 0 6 -7 16 -15 23 -13 10 -15 9 -15 -8z" />
+                    <path d="M2377 2773 c-2 -5 2 -19 9 -33 l14 -25 0 33 c0 29 -13 43 -23 25z" />
+                    <path d="M3160 2709 c0 -11 4 -18 10 -14 5 3 7 12 3 20 -7 21 -13 19 -13 -6z" />
+                    <path d="M2407 2699 c7 -7 15 -10 18 -7 3 3 -2 9 -12 12 -14 6 -15 5 -6 -5z" />
+                    <path d="M3152 2625 c0 -16 2 -22 5 -12 2 9 2 23 0 30 -3 6 -5 1 -5 -18z" />
+                    <path d="M3082 2330 c0 -14 2 -19 5 -12 2 6 2 18 0 25 -3 6 -5 1 -5 -13z" />
+                    <path d="M2440 2335 c0 -3 2 -5 5 -5 3 0 5 2 5 5 0 3 -2 5 -5 5 -3 0 -5 -2 -5 -5z" />
+                    <path d="M2400 2305 c0 -3 2 -5 5 -5 3 0 5 2 5 5 0 3 -2 5 -5 5 -3 0 -5 -2 -5 -5z" />
+                    <path d="M2400 2265 c0 -3 2 -5 5 -5 3 0 5 2 5 5 0 3 -2 5 -5 5 -3 0 -5 -2 -5 -5z" />
+                    <path d="M3027 2214 c-4 -4 -7 -14 -7 -23 0 -11 3 -12 11 -4 6 6 10 16 7 23 -2 6 -7 8 -11 4z" />
+                    <path
+                        d="M2983 2155 c-7 -8 -13 -19 -13 -25 0 -21 -55 -60 -107 -76 -48 -14 -53 -18 -53 -45 0 -62 122 5 176 97 33 55 30 87 -3 49z" />
+                    <path
+                        d="M2103 1033 c-13 -10 26 -105 50 -120 18 -11 370 -3 385 9 6 6 12 32 12 59 l0 49 -62 0 c-35 0 -133 3 -218 6 -85 3 -160 2 -167 -3z" />
+                    <path
+                        d="M2585 1030 c-16 -4 -24 -8 -17 -9 8 0 36 -23 63 -51 48 -49 56 -69 50 -135 -2 -35 -52 -189 -71 -220 -10 -16 -23 -48 -30 -70 -7 -22 -19 -44 -26 -48 -8 -4 -14 -14 -14 -21 0 -7 -7 -13 -15 -13 -11 0 -15 12 -15 42 l0 42 -82 6 c-111 8 -115 0 -33 -75 112 -103 111 -102 148 -87 38 15 147 116 147 136 0 7 3 13 8 13 9 0 32 49 32 68 0 7 7 20 15 28 8 9 15 26 15 39 0 13 3 25 8 27 12 5 46 70 100 188 9 19 27 51 39 70 50 76 44 80 -134 79 -87 -1 -171 -5 -188 -9z" />
+                    <path
+                        d="M2180 866 c0 -12 31 -70 48 -88 16 -19 147 -25 246 -12 l46 7 0 43 0 44 -124 0 c-68 0 -144 3 -170 6 -25 4 -46 4 -46 0z" />
+                    <path
+                        d="M2260 704 c0 -8 9 -33 20 -54 l20 -40 99 0 c109 0 111 1 111 77 l0 32 -125 -1 c-102 0 -125 -3 -125 -14z" />
+                    <path d="M2550 565 c0 -3 2 -5 5 -5 3 0 5 2 5 5 0 3 -2 5 -5 5 -3 0 -5 -2 -5 -5z" />
+                </g>
+            </svg>
+            <span class="logo-text">VII CONGRESO CBTa 197</span>
+        </div>
+        <div class="nav-links">
+            <a href="#about" data-i18n="nav.about">Acerca de</a>
+            <a href="#speakers" data-i18n="nav.speakers">Ponentes</a>
+            <a href="#experience" data-i18n="nav.experience">Programa</a>
+            <a href="#courses" data-i18n="nav.courses">Cursos</a>
+            <a href="#faq" data-i18n="nav.faq">Dudas</a>
+        </div>
+        <div class="nav-actions">
+            <div class="language-selector">
+                <button class="lang-btn active" data-lang="es">ES</button>
+                <button class="lang-btn" data-lang="en">EN</button>
+            </div>
+            <!-- Smaller Audio Toggle for Nav -->
+            <button class="nav-audio-toggle" id="audio-toggle-btn" title="Activar/Desactivar Sonido">
+                <span class="btn-icon"></span>
+            </button>
+            <button class="nav-cta liquid-btn" id="open-badge-modal" data-i18n="nav.badge">Obtener Pase Virtual</button>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="hero" id="hero">
+        <div class="hero-content">
+            <div class="hero-badge" data-animate="fade-in-up">
+                <span class="badge-dot"></span>
+                <span data-i18n="hero.badge">23 de Enero 2026 • Modalidad En Línea</span>
+            </div>
+
+
+            <h1 class="hero-title" data-animate="fade-in-up" data-delay="0.1">
+                <span data-i18n="hero.title.prefix">VII Congreso Académico Internacional </span>
+                <span class="gradient-text" data-i18n="hero.title">de Educación Media Superior</span>
+            </h1>
+            <p class="hero-subtitle" data-animate="fade-in-up" data-delay="0.2" data-i18n="hero.subtitle">
+                “Divulgación Científica y Metodología STEAM: Soluciones con Ciencia”.
+                Fortaleciendo la formación continua docente para garantizar una educación de calidad ante los retos
+                globales.
+            </p>
+            <div class="hero-cta" data-animate="fade-in-up" data-delay="0.3">
+                <a href="https://forms.gle/xNYKrrjiAhbzHQBQ7" target="_blank" class="liquid-btn primary"
+                    id="register-hero-btn" style="text-decoration: none;">
+                    <span class="btn-text" data-i18n="hero.cta">GENERA TU CONSTANCIA AQUÍ</span>
+                </a>
+            </div>
+            <div class="hero-stats" data-animate="fade-in-up" data-delay="0.4">
+                <div class="stat">
+                    <span class="stat-number">6+</span>
+                    <span class="stat-label" data-i18n="hero.stats.speakers">Ponentes</span>
+                </div>
+                <div class="stat">
+                    <span class="stat-number">4+</span>
+                    <span class="stat-label" data-i18n="hero.stats.workshops">Talleres</span>
+                </div>
+                <div class="stat">
+                    <span class="stat-number">4</span>
+                    <span class="stat-label" data-i18n="hero.stats.countries">Países</span>
+                </div>
+                <div class="stat">
+                    <span class="stat-number">7,957+</span>
+                    <span class="stat-label" data-i18n="hero.stats.attendees">Asistentes</span>
+                </div>
+            </div>
+        </div>
+
+
+    </section>
+
+    <!-- About Section -->
+    <section class="section about" id="about">
+        <div class="section-container">
+            <div class="section-header" data-animate="fade-in-up">
+                <span class="section-tag" data-i18n="section.tag">VII Congreso CBTa 197</span>
+                <h2 class="section-title" data-i18n="section.speakers">Ponentes de Clase Mundial</h2>
+            </div>
+            <div class="about-grid">
+                <div class="about-card" data-animate="fade-in-up" data-delay="0.1">
+                    <div class="card-icon">
+                        <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                            stroke-width="1.5">
+                            <circle cx="12" cy="12" r="10" />
+                            <circle cx="12" cy="12" r="3" />
+                            <line x1="12" y1="2" x2="12" y2="5" />
+                            <line x1="12" y1="19" x2="12" y2="22" />
+                        </svg>
+                    </div>
+                    <h3 data-i18n="about.card1.title">Objetivo Central</h3>
+                    <p data-i18n="about.card1.text">Abordar temas vanguardistas para fortalecer la formación continua
+                        docente y garantizar una educación de calidad que responda a los retos globales.</p>
+                </div>
+                <div class="about-card" data-animate="fade-in-up" data-delay="0.2">
+                    <div class="card-icon">
+                        <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                            stroke-width="1.5">
+                            <path
+                                d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4M4.93 19.07l2.83-2.83M16.24 7.76l2.83-2.83" />
+                            <circle cx="12" cy="12" r="4" />
+                        </svg>
+                    </div>
+                    <h3 data-i18n="about.card2.title">Modalidad Online</h3>
+                    <p data-i18n="about.card2.text">Gratuito, en línea a través de Google Meet, con transmisión
+                        simultánea en YouTube y Facebook Live.</p>
+                </div>
+                <div class="about-card" data-animate="fade-in-up" data-delay="0.3">
+                    <div class="card-icon">
+                        <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                            stroke-width="1.5">
+                            <path
+                                d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z" />
+                        </svg>
+                    </div>
+                    <h3 data-i18n="about.card3.title">Soluciones con Ciencia</h3>
+                    <p data-i18n="about.card3.text">Enfoque en la metodología STEAM como catalizador de innovación y
+                        pensamiento crítico.</p>
+                </div>
+                <div class="about-card" data-animate="fade-in-up" data-delay="0.4">
+                    <div class="card-icon">
+                        <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                            stroke-width="1.5">
+                            <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" />
+                            <circle cx="9" cy="7" r="4" />
+                            <path d="M23 21v-2a4 4 0 0 0-3-3.87" />
+                            <path d="M16 3.13a4 4 0 0 1 0 7.75" />
+                        </svg>
+                    </div>
+                    <h3 data-i18n="about.card4.title">Organización</h3>
+                    <p data-i18n="about.card4.text">Liderado por la Dirección del plantel, Consejo Técnico Académico,
+                        Formación Docente y Vinculación.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Circular Speakers Gallery -->
+    <div class="gallery-pin-wrapper">
+        <section class="circular-gallery-section" id="speakers-gallery">
+            <canvas id="gallery-bg-canvas"></canvas>
+            <div class="section-container">
+                <div class="section-header" data-animate="fade-in-up">
+                    <span class="section-tag" data-i18n="speakers.gallery.tag">PONENTES</span>
+                    <h2 class="section-title" data-i18n="speakers.gallery.title">Explora a los Ponentes</h2>
+                </div>
+                <div id="circular-gallery-container"></div>
+            </div>
+        </section>
+    </div>
+
+
+
+    <section id="lq-ag-section" class="lq-ag-wrapper">
+
+        <canvas id="lq-ag-canvas"></canvas>
+
+        <div class="lq-ag-container">
+            <div class="lq-ag-header">
+                <h2 class="lq-ag-title" data-i18n="section.agenda">Agenda Oficial</h2>
+                <div class="lq-ag-divider"></div>
+
+                <p class="lq-ag-date" style="display: block; margin-bottom: 40px !important;" data-i18n="agenda.date">
+                    Viernes, 23 de Enero de
+                    2026</p>
+            </div>
+
+            <div id="lq-ag-timeline" class="lq-ag-timeline"></div>
+
+        </div>
+
+        <svg style="position: absolute; width: 0; height: 0; overflow: hidden;" aria-hidden="true">
+            <defs>
+                <filter id="water-ripple-filter">
+                    <feTurbulence type="fractalNoise" baseFrequency="0.015" numOctaves="2" result="rippleNoise" />
+                    <feDisplacementMap in="SourceGraphic" in2="rippleNoise" scale="30" xChannelSelector="R"
+                        yChannelSelector="G" />
+                    <feGaussianBlur stdDeviation="0.5" />
+                </filter>
+            </defs>
+        </svg>
+    </section>
+
+    <!-- Dynamic Events & History Section -->
+    <section class="experience-section" id="experience">
+        <div class="experience-container">
+            <div class="section-header" data-animate="fade-in-up">
+                <span class="section-tag" data-i18n="experience.tag">Cronograma del Congreso</span>
+                <h2 class="section-title" data-i18n="experience.title">Programa y Experiencia</h2>
+            </div>
+
+            <!-- Agenda Grid with Card 14 Design -->
+            <div class="cards-grid" id="agenda-grid">
+                <!-- Each card is a Workshop, Course or Conference -->
+                <!-- Cultura Maker (New 08:30) -->
+                <div class="event-card" data-animate="fade-in-up">
+                    <div class="event-card-header">
+                        <div class="header-main">
+                            <span class="type-tag" data-i18n="common.conference">Conferencia</span>
+                            <h2 data-i18n="agenda.maker.title">La Cultura Maker como Motor de Innovación en Educación
+                                Media Superior</h2>
+                        </div>
+                        <div class="header-date">
+                            <span class="date-weekday" data-i18n="common.friday">VIERNES</span>
+                            <div class="date-big"><span data-i18n="common.jan">ENE</span>23</div>
+                        </div>
+                    </div>
+                    <div class="event-card-image">
+                        <img src="logopantera.png" alt="Logo Jose Antonio Quirarte" class="event-mini-logo">
+                    </div>
+                    <div class="event-card-info">
+                        <h3 data-i18n="agenda.maker.speaker">Jose Antonio Quirarte (México)</h3>
+                        <div class="info-details">
+                            <div class="info-item">
+                                <svg class="meet-card-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 50 50"
+                                    style="width: 16px; height: 16px; margin-right: 5px; fill: currentColor; opacity: 0.8;">
+                                    <path
+                                        d="M2 18L2 32 12 32 12 18zM39 9v4.31l-10 9V16H14V6h22C37.66 6 39 7.34 39 9zM29 27.69l10 9V41c0 1.66-1.34 3-3 3H14V34h15V27.69zM12 34v10H5c-1.657 0-3-1.343-3-3v-7H12zM12 6L12 16 2 16zM29 25L39 16 39 34zM49 9.25v31.5c0 .87-1.03 1.33-1.67.75L41 35.8V14.2l6.33-5.7C47.97 7.92 49 8.38 49 9.25z">
+                                    </path>
+                                </svg>
+                                <span data-i18n="agenda.meet">Google Meet</span>
+                            </div>
+                            <div class="info-item">
+                                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                    stroke-width="2">
+                                    <circle cx="12" cy="12" r="10" />
+                                    <polyline points="12 6 12 12 16 14" />
+                                </svg>
+                                <span>08:30 AM - 09:20 AM</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="event-card-action">
+                        <button class="btn-reminder" onclick="addEventReminder('maker')"
+                            data-i18n="common.reminder">Añadir Recordatorio</button>
+                    </div>
+                </div>
+
+                <!-- Minecraft Education -->
+                <div class="event-card" data-animate="fade-in-up">
+                    <div class="event-card-header">
+                        <div class="header-main">
+                            <span class="type-tag" data-i18n="common.conference">Conferencia</span>
+                            <h2 data-i18n="agenda.keynote1.title">El uso de Minecraft Education para el aprendizaje de
+                                Ciencias en el aula
+                            </h2>
+                        </div>
+                        <div class="header-date">
+                            <span class="date-weekday" data-i18n="common.friday">VIERNES</span>
+                            <div class="date-big"><span data-i18n="common.jan">ENE</span>23</div>
+                        </div>
+                    </div>
+                    <div class="event-card-image">
+                        <img src="logopatricia.png" alt="Logo Patricia Escabias" class="event-mini-logo">
+                    </div>
+                    <div class="event-card-info">
+                        <h3 data-i18n="agenda.keynote1.speaker">Patricia Escabias Prieto (España)</h3>
+                        <div class="info-details">
+                            <div class="info-item">
+                                <svg class="meet-card-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 50 50"
+                                    style="width: 16px; height: 16px; margin-right: 5px; fill: currentColor; opacity: 0.8;">
+                                    <path
+                                        d="M2 18L2 32 12 32 12 18zM39 9v4.31l-10 9V16H14V6h22C37.66 6 39 7.34 39 9zM29 27.69l10 9V41c0 1.66-1.34 3-3 3H14V34h15V27.69zM12 34v10H5c-1.657 0-3-1.343-3-3v-7H12zM12 6L12 16 2 16zM29 25L39 16 39 34zM49 9.25v31.5c0 .87-1.03 1.33-1.67.75L41 35.8V14.2l6.33-5.7C47.97 7.92 49 8.38 49 9.25z">
+                                    </path>
+                                </svg>
+                                <span data-i18n="agenda.meet">Google Meet</span>
+                            </div>
+                            <div class="info-item">
+                                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                    stroke-width="2">
+                                    <circle cx="12" cy="12" r="10" />
+                                    <polyline points="12 6 12 12 16 14" />
+                                </svg>
+                                <span>09:30 AM - 10:20 AM</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="event-card-action">
+                        <button class="btn-reminder" onclick="addEventReminder('keynote1')"
+                            data-i18n="common.reminder">Añadir Recordatorio</button>
+                    </div>
+                </div>
+
+                <!-- Workshop 1: IA -->
+                <div class="event-card" data-animate="fade-in-up" data-delay="0.1" id="courses">
+                    <div class="event-card-header">
+                        <div class="header-main">
+                            <span class="type-tag" data-i18n="common.workshop">Taller</span>
+                            <h2 data-i18n="agenda.workshop1.title">Investigación potenciada con IA</h2>
+                        </div>
+                        <div class="header-date">
+                            <span class="date-weekday" data-i18n="common.friday">VIERNES</span>
+                            <div class="date-big"><span data-i18n="common.jan">ENE</span>23</div>
+                        </div>
+                    </div>
+                    <div class="event-card-image">
+                        <img src="logowilliam.png" alt="Logo William Castillo" class="event-mini-logo">
+                    </div>
+                    <div class="event-card-info">
+                        <h3 data-i18n="agenda.workshop1.speaker">William Castillo Toloza (Colombia)</h3>
+                        <div class="info-details">
+                            <div class="info-item">
+                                <svg class="meet-card-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 50 50"
+                                    style="width: 16px; height: 16px; margin-right: 5px; fill: currentColor; opacity: 0.8;">
+                                    <path
+                                        d="M2 18L2 32 12 32 12 18zM39 9v4.31l-10 9V16H14V6h22C37.66 6 39 7.34 39 9zM29 27.69l10 9V41c0 1.66-1.34 3-3 3H14V34h15V27.69zM12 34v10H5c-1.657 0-3-1.343-3-3v-7H12zM12 6L12 16 2 16zM29 25L39 16 39 34zM49 9.25v31.5c0 .87-1.03 1.33-1.67.75L41 35.8V14.2l6.33-5.7C47.97 7.92 49 8.38 49 9.25z">
+                                    </path>
+                                </svg>
+                                <span data-i18n="agenda.sala1">Sala 1 (Google Meet)</span>
+                            </div>
+                            <div class="info-item">
+                                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                    stroke-width="2">
+                                    <circle cx="12" cy="12" r="10" />
+                                    <polyline points="12 6 12 12 16 14" />
+                                </svg>
+                                <span>10:30 AM - 12:30 PM</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="event-card-action">
+                        <button class="btn-reminder" onclick="addEventReminder('workshop1')"
+                            data-i18n="common.reminder">Añadir
+                            Recordatorio</button>
+                    </div>
+                </div>
+
+                <!-- Workshop 2: Phet -->
+                <div class="event-card" data-animate="fade-in-up" data-delay="0.2">
+                    <div class="event-card-header">
+                        <div class="header-main">
+                            <span class="type-tag" data-i18n="common.workshop">Taller</span>
+                            <h2 data-i18n="agenda.workshop2.title">Simulador Phet y STEAM</h2>
+                        </div>
+                        <div class="header-date">
+                            <span class="date-weekday" data-i18n="common.friday">VIERNES</span>
+                            <div class="date-big"><span data-i18n="common.jan">ENE</span>23</div>
+                        </div>
+                    </div>
+                    <div class="event-card-image">
+                        <img src="logodora.png" alt="Logo Dora González" class="event-mini-logo">
+                    </div>
+                    <div class="event-card-info">
+                        <h3 data-i18n="agenda.workshop2.speaker">Dora González STEAM (México)</h3>
+                        <div class="info-details">
+                            <div class="info-item">
+                                <svg class="meet-card-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 50 50"
+                                    style="width: 16px; height: 16px; margin-right: 5px; fill: currentColor; opacity: 0.8;">
+                                    <path
+                                        d="M2 18L2 32 12 32 12 18zM39 9v4.31l-10 9V16H14V6h22C37.66 6 39 7.34 39 9zM29 27.69l10 9V41c0 1.66-1.34 3-3 3H14V34h15V27.69zM12 34v10H5c-1.657 0-3-1.343-3-3v-7H12zM12 6L12 16 2 16zM29 25L39 16 39 34zM49 9.25v31.5c0 .87-1.03 1.33-1.67.75L41 35.8V14.2l6.33-5.7C47.97 7.92 49 8.38 49 9.25z">
+                                    </path>
+                                </svg>
+                                <span data-i18n="agenda.sala2">Sala 2 (Google Meet)</span>
+                            </div>
+                            <div class="info-item">
+                                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                    stroke-width="2">
+                                    <circle cx="12" cy="12" r="10" />
+                                    <polyline points="12 6 12 12 16 14" />
+                                </svg>
+                                <span>10:30 AM - 12:30 PM</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="event-card-action">
+                        <button class="btn-reminder" onclick="addEventReminder('workshop2')"
+                            data-i18n="common.reminder">Añadir
+                            Recordatorio</button>
+                    </div>
+                </div>
+
+                <!-- Workshop 3: 3D -->
+                <div class="event-card" data-animate="fade-in-up" data-delay="0.3">
+                    <div class="event-card-header">
+                        <div class="header-main">
+                            <span class="type-tag" data-i18n="common.workshop">Taller</span>
+                            <h2 data-i18n="agenda.workshop3.title">Diseño 3D e Innovación</h2>
+                        </div>
+                        <div class="header-date">
+                            <span class="date-weekday" data-i18n="common.friday">VIERNES</span>
+                            <div class="date-big"><span data-i18n="common.jan">ENE</span>23</div>
+                        </div>
+                    </div>
+                    <div class="event-card-image">
+                        <img src="logopantera.png" alt="Logo Pantera" class="event-mini-logo">
+                    </div>
+                    <div class="event-card-info">
+                        <h3 data-i18n="agenda.workshop3.speaker">Jesús Gabriel Félix Mendívil (México)</h3>
+                        <div class="info-details">
+                            <div class="info-item">
+                                <svg class="meet-card-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 50 50"
+                                    style="width: 16px; height: 16px; margin-right: 5px; fill: currentColor; opacity: 0.8;">
+                                    <path
+                                        d="M2 18L2 32 12 32 12 18zM39 9v4.31l-10 9V16H14V6h22C37.66 6 39 7.34 39 9zM29 27.69l10 9V41c0 1.66-1.34 3-3 3H14V34h15V27.69zM12 34v10H5c-1.657 0-3-1.343-3-3v-7H12zM12 6L12 16 2 16zM29 25L39 16 39 34zM49 9.25v31.5c0 .87-1.03 1.33-1.67.75L41 35.8V14.2l6.33-5.7C47.97 7.92 49 8.38 49 9.25z">
+                                    </path>
+                                </svg>
+                                <span data-i18n="agenda.sala3">Sala 3 (Google Meet)</span>
+                            </div>
+                            <div class="info-item">
+                                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                    stroke-width="2">
+                                    <circle cx="12" cy="12" r="10" />
+                                    <polyline points="12 6 12 12 16 14" />
+                                </svg>
+                                <span>10:30 AM - 12:30 PM</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="event-card-action">
+                        <button class="btn-reminder" onclick="addEventReminder('workshop3')"
+                            data-i18n="common.reminder">Añadir
+                            Recordatorio</button>
+                    </div>
+                </div>
+
+                <!-- Conferencia 2: Deylin -->
+                <div class="event-card" data-animate="fade-in-up" data-delay="0.4">
+                    <div class="event-card-header">
+                        <div class="header-main">
+                            <span class="type-tag" data-i18n="common.conference">Conferencia</span>
+                            <h4 data-i18n="agenda.keynote2.title">Artes en la Ciencia: El Pensamiento Artístico como
+                                Catalizador de Hipótesis Científicas</h4>
+                        </div>
+                        <div class="header-date">
+                            <span class="date-weekday" data-i18n="common.friday">VIERNES</span>
+                            <div class="date-big"><span data-i18n="common.jan">ENE</span>23</div>
+                        </div>
+                    </div>
+                    <div class="event-card-image">
+                        <img src="logopantera.png" alt="Logo Pantera" class="event-mini-logo">
+                    </div>
+                    <div class="event-card-info">
+                        <h3 data-i18n="agenda.keynote2.speaker">Deylin Hernández (Panamá)</h3>
+                        <div class="info-details">
+                            <div class="info-item">
+                                <svg class="meet-card-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 50 50"
+                                    style="width: 16px; height: 16px; margin-right: 5px; fill: currentColor; opacity: 0.8;">
+                                    <path
+                                        d="M2 18L2 32 12 32 12 18zM39 9v4.31l-10 9V16H14V6h22C37.66 6 39 7.34 39 9zM29 27.69l10 9V41c0 1.66-1.34 3-3 3H14V34h15V27.69zM12 34v10H5c-1.657 0-3-1.343-3-3v-7H12zM12 6L12 16 2 16zM29 25L39 16 39 34zM49 9.25v31.5c0 .87-1.03 1.33-1.67.75L41 35.8V14.2l6.33-5.7C47.97 7.92 49 8.38 49 9.25z">
+                                    </path>
+                                </svg>
+                                <span data-i18n="agenda.meet">Google Meet</span>
+                            </div>
+                            <div class="info-item">
+                                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                    stroke-width="2">
+                                    <circle cx="12" cy="12" r="10" />
+                                    <polyline points="12 6 12 12 16 14" />
+                                </svg>
+                                <span>12:30 PM - 01:30 PM</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="event-card-action">
+                        <button class="btn-reminder" onclick="addEventReminder('keynote2')"
+                            data-i18n="common.reminder">Añadir Recordatorio</button>
+                    </div>
+                </div>
+
+                <!-- Conferencia 3: Roxana -->
+                <div class="event-card" data-animate="fade-in-up" data-delay="0.5">
+                    <div class="event-card-header">
+                        <div class="header-main">
+                            <span class="type-tag" data-i18n="common.conference">Conferencia</span>
+                            <h4 data-i18n="agenda.keynote3.title">Cultura Científica: Toma de decisiones informadas</h4>
+                        </div>
+                        <div class="header-date">
+                            <span class="date-weekday" data-i18n="common.friday">VIERNES</span>
+                            <div class="date-big"><span data-i18n="common.jan">ENE</span>23</div>
+                        </div>
+                    </div>
+                    <div class="event-card-image">
+                        <img src="logopantera.png" alt="Logo Pantera" class="event-mini-logo">
+                    </div>
+                    <div class="event-card-info">
+                        <h3 data-i18n="agenda.keynote3.speaker">Roxana de León (México)</h3>
+                        <div class="info-details">
+                            <div class="info-item">
+                                <svg class="meet-card-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 50 50"
+                                    style="width: 16px; height: 16px; margin-right: 5px; fill: currentColor; opacity: 0.8;">
+                                    <path
+                                        d="M2 18L2 32 12 32 12 18zM39 9v4.31l-10 9V16H14V6h22C37.66 6 39 7.34 39 9zM29 27.69l10 9V41c0 1.66-1.34 3-3 3H14V34h15V27.69zM12 34v10H5c-1.657 0-3-1.343-3-3v-7H12zM12 6L12 16 2 16zM29 25L39 16 39 34zM49 9.25v31.5c0 .87-1.03 1.33-1.67.75L41 35.8V14.2l6.33-5.7C47.97 7.92 49 8.38 49 9.25z">
+                                    </path>
+                                </svg>
+                                <span data-i18n="agenda.meet">Google Meet</span>
+                            </div>
+                            <div class="info-item">
+                                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                    stroke-width="2">
+                                    <circle cx="12" cy="12" r="10" />
+                                    <polyline points="12 6 12 12 16 14" />
+                                </svg>
+                                <span>01:30 PM - 02:30 PM</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="event-card-action">
+                        <button class="btn-reminder" onclick="addEventReminder('keynote3')"
+                            data-i18n="common.reminder">Añadir Recordatorio</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- History Section (Merged from Paneles) -->
+            <div class="history-section-header" data-animate="fade-in-up">
+                <span class="section-tag" data-i18n="experience.history.tag">Nuestra Evolución</span>
+                <h3 class="section-title" data-i18n="experience.history.title">Historial del Congreso</h3>
+            </div>
+            <div class="history-mini-timeline" data-animate="fade-in-up">
+                <div class="history-item">
+                    <div class="year">2020</div>
+                    <p data-i18n="history.2020">Liderazgo Pedagógico para la Excelencia Educativa.</p>
+                </div>
+                <div class="history-item">
+                    <div class="year">2021</div>
+                    <p data-i18n="history.2021">Disrupción Educativa para enfrentar retos actuales.</p>
+                </div>
+                <div class="history-item">
+                    <div class="year">2022</div>
+                    <p data-i18n="history.2022">Integración de la Creatividad e Innovación para la transformación.</p>
+                </div>
+                <div class="history-item">
+                    <div class="year">2023</div>
+                    <p data-i18n="history.2023">Liderazgo Pedagógico y mejora institucional.</p>
+                </div>
+                <div class="history-item">
+                    <div class="year">2024-25</div>
+                    <p data-i18n="history.2024">Enfoque en la Inteligencia Artificial (IA) y el aprendizaje adaptativo.
+                    </p>
+                </div>
+                <div class="history-item">
+                    <div class="year">2026</div>
+                    <p data-i18n="history.2026">Divulgación Científica y Metodología STEAM: Soluciones con Ciencia.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- FAQ Section -->
+    <section class="section faq" id="faq">
+        <div class="section-container">
+            <div class="section-header" data-animate="fade-in-up">
+                <span class="section-tag" data-i18n="faq.tag">¿Dudas sobre el Congreso?</span>
+                <h2 class="section-title" data-i18n="faq.title">Preguntas Frecuentes</h2>
+            </div>
+            <div class="faq-list">
+                <div class="faq-item" data-animate="fade-in-up" data-delay="0.1">
+                    <button class="faq-question">
+                        <span data-i18n="faq.q1">¿Cómo puedo registrarme al congreso?</span>
+                        <span class="faq-icon">+</span>
+                    </button>
+                    <div class="faq-answer">
+                        <p data-i18n="faq.a1">Puedes registrarte haciendo clic en el botón "Registrarse" en la
+                            parte superior de la página. El registro es gratuito para estudiantes.</p>
+                    </div>
+                </div>
+                <div class="faq-item" data-animate="fade-in-up" data-delay="0.2">
+                    <button class="faq-question">
+                        <span data-i18n="faq.q2">¿El congreso es presencial o virtual?</span>
+                        <span class="faq-icon">+</span>
+                    </button>
+                    <div class="faq-answer">
+                        <p data-i18n="faq.a2">El congreso es virtual. Puedes participar a través de las plataformas de
+                            videoconferencia indicadas en el programa.</p>
+                    </div>
+                </div>
+                <div class="faq-item" data-animate="fade-in-up" data-delay="0.3">
+                    <button class="faq-question">
+                        <span data-i18n="faq.q3">¿Recibiré un certificado de participación?</span>
+                        <span class="faq-icon">+</span>
+                    </button>
+                    <div class="faq-answer">
+                        <p data-i18n="faq.a3">Sí, todos los participantes registrados recibirán un certificado
+                            digital de participación al finalizar el congreso.</p>
+                    </div>
+                </div>
+                <div class="faq-item" data-animate="fade-in-up" data-delay="0.4">
+                    <button class="faq-question">
+                        <span data-i18n="faq.q4">¿Puedo acceder a las grabaciones después?</span>
+                        <span class="faq-icon">+</span>
+                    </button>
+                    <div class="faq-answer">
+                        <p data-i18n="faq.a4">Sí, todas las sesiones serán grabadas y estarán disponibles para
+                            los participantes registrados en nuestro canal de YouTube.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- CTA Section -->
+    <section class="section cta-section" data-animate="fade-in-up">
+        <div class="cta-container">
+            <h2 data-i18n="cta.title">¿Estás disfrutando el evento?</h2>
+            <p data-i18n="cta.text">Comparte tu experiencia. También es importante conocer tu opinión.</p>
+            <a href="https://forms.gle/xNYKrrjiAhbzHQBQ7" target="_blank" class="liquid-btn primary large"
+                style="text-decoration: none;" data-i18n="cta.btn">¡Cuéntanos tu experiencia!</a>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="footer-content">
+            <div class="footer-logo">
+                <img src="logocongreso.png" alt="TechCongress 2026" style="height: 50px;">
+                <span class="logo-text"> VII Congreso Internacional 2026</span>
+            </div>
+
+            <div class="footer-links">
+                <a href="#" data-i18n="footer.privacy">Política de Privacidad</a>
+                <a href="#" data-i18n="footer.terms">Términos y Condiciones</a>
+                <a href="#" data-i18n="footer.contact">Contacto</a>
+            </div>
+
+            <div class="footer-partners-mini">
+                <img src="logocbta.png" alt="CBTa 197" class="partner-logo-mini">
+                <img src="logodgta.png" alt="DGTA" class="partner-logo-mini">
+                <img src="logoseducacion.png" alt="Secretaría de Educación" class="partner-logo-mini">
+                <img src="logosems.png" alt="SEMS" class="partner-logo-mini">
+            </div>
+        </div>
+
+        <div class="footer-social-centered">
+            <div class="footer-social">
+                <!-- Instagram (Left) -->
+                <a href="https://www.instagram.com/cbta197/?hl=es" target="_blank" class="social-link"
+                    title="Instagram">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                        stroke-linecap="round" stroke-linejoin="round">
+                        <rect x="2" y="2" width="20" height="20" rx="5" ry="5"></rect>
+                        <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path>
+                        <line x1="17.5" y1="6.5" x2="17.51" y2="6.5"></line>
+                    </svg>
+                </a>
+
+                <!-- CBTa Logo (Middle) -->
+                <a href="https://cbta197.edu.mx" target="_blank" class="social-link" title="Sitio Web CBTa 197">
+                    <img src="logocbta.png" alt="CBTa Logo" style="width: 25px; height: 25px; object-fit: contain;">
+                </a>
+
+                <!-- Facebook (Right) -->
+                <a href="https://www.facebook.com/CBTA197OFICIAL" target="_blank" class="social-link" title="Facebook">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                        stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"></path>
+                    </svg>
+                </a>
+            </div>
+        </div>
+
+        <div class="footer-bottom">
+            <p data-i18n="footer.rights">© 2026 Congreso Academico Internacional CBTa 197. Todos los derechos
+                reservados.</p>
+        </div>
+    </footer>
+
+    <!-- AI Chatbot -->
+    <div class="chatbot-container" id="chatbot-master-container">
+
+        <div class="chatbot-window" id="chatbot-window">
+            <div class="chatbot-header">
+                <div class="chatbot-title">
+                    <span class="chatbot-avatar"><svg xmlns="http://www.w3.org/2000/svg" x="0px" y="0px" width="100"
+                            height="100" viewBox="0 0 100 100">
+                            <path fill="#a2b4cc"
+                                d="M59.248,13.304C58.612,13.968,56.595,15.5,51.5,15.5c-5.897,0-7.673-2.051-7.953-2.433 C34.504,15.726,28,22.583,28,31.25c0,1.096,0,3.54,0,5.25l-0.039,0.513C28,37,28,37,28,37s4,2,16,2c14.5,0,18-2,18-2s6,3,6,8 c0,1.844,0,4,0,9c0,6.355-7,9-15,9c-2.873,0-18.451,0-27,0v3.5c0,0,1.147,1.388,6.5,2.094V81H32c-3,0-4,1.5-4,2.5s0,4.5,0,4.5 s0,5,19.422,5C71.956,93,75,84.5,75,84.5s0-42.342,0-53.25C75,22.838,68.527,14.539,59.248,13.304z">
+                            </path>
+                            <path fill="#c6dff1"
+                                d="M53,63c-4,0-32.625,0-32.625,0C16.302,63,13,59.698,13,55.625v-9.396C13,42,17.824,40.392,22,39 c6-2,6-2,6-2s4,2,16,2c14.5,0,18-2,18-2s6,3,6,8c0,1.844,0,4,0,9C68,60.355,61,63,53,63z">
+                            </path>
+                            <path fill="#a2b4cc"
+                                d="M54.953,8.414l0.025-0.04L54.5,2.5V2h-6l-0.022,0.5L48,8.374C48.813,9.038,49.526,9.5,51.5,9.5 C53.434,9.5,54.276,9.057,54.953,8.414z">
+                            </path>
+                            <path fill="#444445"
+                                d="M51.5,43.5h-30c-2.761,0-5,2.239-5,5v3v3c0,2.761,2.239,5,5,5h32c2.761,0,5-2.239,5-5v-3v-1 C58.5,46.634,55.366,43.5,51.5,43.5z">
+                            </path>
+                            <path fill="#fef6aa"
+                                d="M51.5,43.5h-3.558c-4.313,1.972-8.04,3.866-8.273,3.985C38.936,48.83,38.5,50.359,38.5,52 c0,3.053,1.446,5.762,3.684,7.5H53.5c2.761,0,5-2.239,5-5v-3v-1C58.5,46.634,55.366,43.5,51.5,43.5z">
+                            </path>
+                            <path fill="#fef6aa"
+                                d="M69,75.5c0-8.5-4.5-8.5-6.5-8.5s-10,2-23,2c-2.897,0-5.189-0.159-7-0.396v16.345 C34.297,85.668,38.558,87,45.5,87C70,87,69,81.5,69,75.5z">
+                            </path>
+                            <path fill="#fef6aa"
+                                d="M39.675,47.482c-0.011,0.006-0.036,0.018-0.036,0.018c-2.214-1.903-4.437-3.202-6.236-4h-5.628 C24.652,45.056,22.5,48.273,22.5,52c0,3.053,1.446,5.762,3.684,7.5h11.619c0.859-0.668,1.609-1.471,2.198-2.391 C39.053,55.634,38.5,53.884,38.5,52C38.5,50.357,38.94,48.827,39.675,47.482z">
+                            </path>
+                            <path fill="#c6dff1"
+                                d="M51.5,15.5c6.5,0,8-2.5,8-2.5S59,9,55.159,8.212C54.44,8.964,53.632,9.5,51.5,9.5 c-1.974,0-2.687-0.462-3.5-1.126C45.5,8.5,43.5,12.104,43.5,13C43.5,13,45,15.5,51.5,15.5z">
+                            </path>
+                            <g>
+                                <path fill="#1f212b"
+                                    d="M34.5,54h-3c-0.276,0-0.5-0.224-0.5-0.5v-3c0-0.276,0.224-0.5,0.5-0.5h3c0.276,0,0.5,0.224,0.5,0.5 v3C35,53.776,34.776,54,34.5,54z">
+                                </path>
+                                <path fill="#1f212b"
+                                    d="M55.5,54h-3c-0.276,0-0.5-0.224-0.5-0.5v-3c0-0.276,0.224-0.5,0.5-0.5h3c0.276,0,0.5,0.224,0.5,0.5 v3C56,53.776,55.776,54,55.5,54z">
+                                </path>
+                                <path fill="#1f212b"
+                                    d="M53,64H20.375C15.757,64,12,60.243,12,55.625v-9.396c0-4.951,5.369-6.74,9.684-8.178l6-2 c0.254-0.083,0.526-0.063,0.764,0.054C28.48,36.122,32.497,38,44,38c13.83,0,17.482-1.857,17.518-1.876 c0.287-0.151,0.641-0.163,0.93-0.019C62.715,36.239,69,39.446,69,45v9C69,60.168,62.869,64,53,64z M27.959,38.068l-5.643,1.881 C18.418,41.248,14,42.72,14,46.229v9.396C14,59.14,16.859,62,20.375,62H53c3.284,0,14-0.577,14-8v-9 c0-3.623-3.806-6.154-5.056-6.888C60.472,38.674,55.753,40,44,40C33.838,40,29.264,38.575,27.959,38.068z">
+                                </path>
+                                <path fill="#1f212b"
+                                    d="M53.5,60h-32c-3.032,0-5.5-2.467-5.5-5.5v-6c0-3.033,2.468-5.5,5.5-5.5h30 c4.136,0,7.5,3.364,7.5,7.5v4C59,57.533,56.532,60,53.5,60z M21.5,44c-2.481,0-4.5,2.019-4.5,4.5v6c0,2.481,2.019,4.5,4.5,4.5h32 c2.481,0,4.5-2.019,4.5-4.5v-4c0-3.584-2.916-6.5-6.5-6.5H21.5z">
+                                </path>
+                                <path fill="#1f212b"
+                                    d="M45.5,88c-9.648,0-14.293-2.519-14.485-2.626c-0.483-0.268-0.657-0.877-0.389-1.36 c0.268-0.482,0.877-0.657,1.359-0.388C32.026,83.648,36.431,86,45.5,86c11.696,0,18.357-1.221,20.963-3.843 c1.567-1.578,1.555-3.614,1.54-5.971L68,75.5c0-7.5-3.578-7.5-5.5-7.5c-0.487,0-1.572,0.166-2.945,0.375 C55.836,68.943,48.913,70,39.5,70c-11.403,0-13.896-2.395-14.281-2.875L25,66.851V63c0-0.552,0.447-1,1-1s1,0.448,1,1v3.035 C27.767,66.529,30.774,68,39.5,68c9.262,0,16.086-1.042,19.752-1.602C60.823,66.158,61.86,66,62.5,66c2.051,0,7.5,0,7.5,9.5 l0.003,0.673c0.017,2.569,0.033,5.225-2.122,7.393C64.834,86.633,57.932,88,45.5,88z">
+                                </path>
+                                <rect width="1" height="16" x="32" y="69" fill="#1f212b"></rect>
+                                <path fill="#1f212b"
+                                    d="M38.5,87c-0.276,0-0.5-0.224-0.5-0.5v-9c0-0.276,0.224-0.5,0.5-0.5s0.5,0.224,0.5,0.5v9 C39,86.776,38.776,87,38.5,87z">
+                                </path>
+                                <rect width="1" height="18" x="50" y="69" fill="#1f212b"></rect>
+                                <path fill="#1f212b"
+                                    d="M62.5,78c-0.276,0-0.5-0.224-0.5-0.5v-10c0-0.276,0.224-0.5,0.5-0.5s0.5,0.224,0.5,0.5v10 C63,77.776,62.776,78,62.5,78z">
+                                </path>
+                                <path fill="#1f212b"
+                                    d="M34.5,54h-3c-0.276,0-0.5-0.224-0.5-0.5v-3c0-0.276,0.224-0.5,0.5-0.5h3c0.276,0,0.5,0.224,0.5,0.5 v3C35,53.776,34.776,54,34.5,54z">
+                                </path>
+                                <path fill="#1f212b"
+                                    d="M55.5,54h-3c-0.276,0-0.5-0.224-0.5-0.5v-3c0-0.276,0.224-0.5,0.5-0.5h3c0.276,0,0.5,0.224,0.5,0.5 v3C56,53.776,55.776,54,55.5,54z">
+                                </path>
+                                <path fill="#1f212b"
+                                    d="M37.975,60H26.013l-0.136-0.105C23.413,57.981,22,55.104,22,52c0-3.814,2.128-7.242,5.554-8.948 L27.659,43l5.948,0.043c1.47,0.652,3.7,1.845,6.1,3.858l1.16-0.604l-0.753,1.424C39.375,49.073,39,50.512,39,52 c0,1.718,0.491,3.391,1.422,4.839l0.173,0.27l-0.173,0.27c-0.607,0.949-1.386,1.796-2.313,2.516L37.975,60z M26.357,59h11.271 c0.693-0.559,1.29-1.197,1.778-1.901C38.485,55.556,38,53.8,38,52c0-1.512,0.347-2.977,1.03-4.361 c-2.245-1.878-4.329-3.007-5.732-3.639h-5.402C24.873,45.552,23,48.607,23,52C23,54.736,24.222,57.278,26.357,59z">
+                                </path>
+                                <path fill="#1f212b"
+                                    d="M53.5,60H42.013l-0.136-0.105C39.413,57.981,38,55.104,38,52c0-1.658,0.414-3.258,1.23-4.754 l0.074-0.136l0.138-0.07c0.405-0.206,4.083-2.069,8.292-3.994L47.942,43H51.5c4.136,0,7.5,3.364,7.5,7.5v4 C59,57.533,56.532,60,53.5,60z M42.357,59H53.5c2.481,0,4.5-2.019,4.5-4.5v-4c0-3.584-2.916-6.5-6.5-6.5h-3.448 c-3.844,1.76-7.221,3.457-8.017,3.859C39.349,49.168,39,50.561,39,52C39,54.736,40.222,57.278,42.357,59z">
+                                </path>
+                                <path fill="#1f212b"
+                                    d="M51.5,16c-6.706,0-8.361-2.631-8.429-2.743L43,13.139V13c0-1.194,2.238-4.987,4.975-5.125 l0.192-0.01l0.149,0.122C49.087,8.617,49.686,9,51.5,9c2.046,0,2.704-0.514,3.298-1.134l0.191-0.2l0.271,0.056 c4.144,0.85,4.73,5.172,4.736,5.216l0.021,0.171l-0.089,0.148C59.861,13.369,58.206,16,51.5,16z M44.02,12.857 C44.42,13.317,46.247,15,51.5,15c5.204,0,7.045-1.651,7.471-2.133c-0.147-0.751-0.858-3.387-3.654-4.106 C54.508,9.531,53.525,10,51.5,10c-2,0-2.851-0.472-3.657-1.11C45.812,9.151,44.214,12.01,44.02,12.857z">
+                                </path>
+                                <path fill="#1f212b"
+                                    d="M43.5,13c0-0.099,0.028-0.236,0.076-0.394c0.001-0.004,0.002-0.007,0.003-0.011 c0.049-0.161,0.123-0.348,0.216-0.551l-0.309,0.022l-0.211,0.038C33.388,15.007,27,22.523,27,31.25v5.25c0,0.552,0.448,1,1,1 s1-0.448,1-1v-5.25c0-7.788,5.78-14.528,14.735-17.197l0.88-0.062C43.781,13.463,43.5,13,43.5,13z">
+                                </path>
+                                <path fill="#1f212b"
+                                    d="M59.345,12.308C59.464,12.724,59.5,13,59.5,13s-0.356,0.58-1.442,1.181l1.001,0.103 C67.437,15.371,74,22.823,74,31.25v53.031C73.47,85.265,69.02,92,47.422,92C30.237,92,29.013,88,29,88v-4.5 c0-0.417,0.539-1.5,3-1.5c0.552,0,1-0.448,1-1s-0.448-1-1-1c-3.955,0-5,2.29-5,3.5V88c0,1.002,0.984,6,20.422,6 c24.95,0,28.385-8.789,28.519-9.163L76,84.674V31.25C76,21.856,68.7,13.549,59.345,12.308z">
+                                </path>
+                                <path fill="#1f212b"
+                                    d="M48.001,8.874c-0.014,0-0.027,0-0.041-0.001c-0.275-0.022-0.48-0.264-0.458-0.539l0.478-5.874 c0.021-0.275,0.267-0.479,0.538-0.458c0.275,0.022,0.48,0.264,0.458,0.539l-0.478,5.874C48.478,8.676,48.259,8.874,48.001,8.874z">
+                                </path>
+                                <path fill="#1f212b"
+                                    d="M54.977,8.874c-0.258,0-0.477-0.198-0.497-0.459l-0.478-5.874c-0.022-0.275,0.183-0.517,0.458-0.539 c0.265-0.02,0.517,0.183,0.538,0.458l0.478,5.874c0.022,0.275-0.183,0.517-0.458,0.539C55.004,8.874,54.99,8.874,54.977,8.874z">
+                                </path>
+                                <path fill="#1f212b"
+                                    d="M38.5,73c-0.276,0-0.5-0.224-0.5-0.5v-3c0-0.276,0.224-0.5,0.5-0.5s0.5,0.224,0.5,0.5v3 C39,72.776,38.776,73,38.5,73z">
+                                </path>
+                                <path fill="#1f212b"
+                                    d="M43,76c-8.082,0-10.705-2.023-10.813-2.109c-0.216-0.173-0.25-0.487-0.078-0.703 c0.171-0.214,0.484-0.25,0.7-0.081l0,0C32.834,73.126,35.343,75,43,75c4.421,0,10.858-0.195,16.418-1.123 c0.269-0.049,0.529,0.138,0.575,0.411s-0.139,0.53-0.411,0.576C53.955,75.803,47.459,76,43,76z">
+                                </path>
+                                <path fill="#1f212b"
+                                    d="M43.542,82c-0.015,0-0.028,0-0.042,0c-6.765-0.001-11.033-1.964-11.212-2.047 c-0.25-0.117-0.357-0.414-0.241-0.664c0.116-0.25,0.414-0.358,0.665-0.242c0.042,0.02,4.262,1.952,10.788,1.953 c0.014,0,0.028,0,0.042,0c3.28,0,8.167-0.108,12.904-0.623c0.277-0.024,0.521,0.168,0.551,0.443 c0.03,0.274-0.169,0.521-0.443,0.551C51.772,81.891,46.847,82,43.542,82z">
+                                </path>
+                                <path fill="#1f212b"
+                                    d="M62.5,80.438c-0.23,0-0.438-0.16-0.488-0.394c-0.059-0.27,0.112-0.536,0.382-0.595 c2.843-0.62,4.969-1.413,6.319-2.359c0.227-0.157,0.539-0.104,0.696,0.123c0.159,0.226,0.104,0.538-0.122,0.696 c-1.46,1.022-3.708,1.869-6.681,2.517C62.57,80.435,62.535,80.438,62.5,80.438z">
+                                </path>
+                                <path fill="#1f212b"
+                                    d="M59.499,80.984c-0.242,0-0.455-0.177-0.493-0.424c-0.042-0.273,0.146-0.528,0.419-0.57l0.179-0.027 c0.272-0.042,0.545-0.083,0.812-0.129c0.268-0.048,0.531,0.135,0.578,0.408c0.047,0.272-0.136,0.531-0.408,0.578 c-0.273,0.047-0.553,0.09-0.831,0.132l-0.179,0.027C59.55,80.982,59.524,80.984,59.499,80.984z">
+                                </path>
+                                <path fill="#1f212b"
+                                    d="M62.5,85.821c-0.276,0-0.5-0.224-0.5-0.5V82.5c0-0.276,0.224-0.5,0.5-0.5s0.5,0.224,0.5,0.5v2.821 C63,85.597,62.776,85.821,62.5,85.821z">
+                                </path>
+                                <path fill="#1f212b"
+                                    d="M64.5,73.722c-0.214,0-0.412-0.139-0.479-0.354c-0.08-0.264,0.068-0.543,0.332-0.624 c1.61-0.492,2.915-1.053,3.878-1.666c0.231-0.146,0.542-0.081,0.69,0.153c0.148,0.233,0.079,0.542-0.153,0.69 c-1.054,0.671-2.402,1.252-4.122,1.778C64.598,73.715,64.548,73.722,64.5,73.722z">
+                                </path>
+                            </g>
+                        </svg></span>
+                    <div>
+                        <h4 data-i18n="chatbot.title">Bender - Asistente del Congreso con IA</h4>
+                        <span class="chatbot-status" data-i18n="chatbot.status">En línea</span>
+                    </div>
+                </div>
+                <button class="chatbot-close" id="chatbot-close">✕</button>
+            </div>
+            <div class="chatbot-messages" id="chatbot-messages">
+                <div class="chat-message bot">
+                    <div class="message-avatar bot-avatar">
+                        <div class="lottie-avatar" id="welcome-lottie"></div>
+                    </div>
+                    <div class="message-content">
+                        <p data-i18n="chatbot.welcome">¡Ey, humano! Soy Bender, el glorioso y metálico anfitrión del
+                            Congreso Tech Innovation 2025.
+                            Estoy aquí porque soy increíble… y quizá para ayudarte.
+                            Entonces, dime, ¿qué se te ofrece?</p>
+                    </div>
+                </div>
+            </div>
+            <div class="chatbot-suggestions">
+                <button class="suggestion-chip" data-question="schedule" data-i18n="chatbot.suggestion1"> ¿Cuándo
+                    es el congreso?</button>
+                <button class="suggestion-chip" data-question="speakers" data-i18n="chatbot.suggestion2">
+                    ¿Quiénes son los ponentes?</button>
+                <button class="suggestion-chip" data-question="register" data-i18n="chatbot.suggestion3"> ¿Cómo
+                    me registro?</button>
+            </div>
+            <div class="chatbot-input">
+                <input type="text" id="chatbot-input" placeholder="Escribe tu pregunta..."
+                    data-i18n="chatbot.placeholder">
+                <button class="chatbot-send" id="chatbot-send">➤</button>
+            </div>
+        </div>
+
+        <button class="chatbot-toggle" id="chatbot-toggle">
+            <span class="chatbot-icon"><svg xmlns="http://www.w3.org/2000/svg" x="0px" y="0px" viewBox="0 0 50 50">
+                    <path
+                        d="M 21.261719 -0.013671875 A 1.0001 1.0001 0 0 0 20.257812 0.875 L 20.078125 2.3164062 C 19.300118 2.7280205 18.770723 3.3487022 18.439453 4.0292969 C 13.741897 4.3216488 10 8.2307367 10 13 L 10 45 A 1.0001 1.0001 0 0 0 10.199219 45.599609 C 10.199219 45.599609 11.153663 46.819996 13.302734 47.894531 C 15.451806 48.969067 18.866667 50 24 50 C 28.555556 50 31.619883 49.620555 33.570312 49.230469 C 35.520742 48.840383 36.447266 48.394531 36.447266 48.394531 A 1.0001 1.0001 0 0 0 37 47.5 L 37 43.5 A 1.0001 1.0001 0 0 0 36 42.5 L 36 36.015625 C 36.832001 35.81523 37.509606 35.610422 37.900391 35.439453 C 38.350152 35.242683 38.658203 35.001953 38.658203 35.001953 A 1.0001 1.0001 0 0 0 39 34.25 L 39 32 C 41.749516 32 44 29.749516 44 27 L 44 25 L 44 23.158203 C 44 20.243768 42.188347 17.626735 39.458984 16.603516 L 39.550781 16.644531 L 37 15.378906 L 37 13 C 37 8.2307367 33.258103 4.3216488 28.560547 4.0292969 C 28.229277 3.3487022 27.699882 2.7280204 26.921875 2.3164062 L 26.742188 0.875 A 1.0001 1.0001 0 0 0 25.708984 -0.013671875 A 1.0001 1.0001 0 0 0 24.757812 1.125 L 24.867188 2 L 22.132812 2 L 22.242188 1.125 A 1.0001 1.0001 0 0 0 21.261719 -0.013671875 z M 21.248047 4 L 25.751953 4 C 26.589514 4.3144261 26.853569 4.8916798 26.923828 5.5292969 C 26.795831 5.5841359 26.685495 5.6409786 26.445312 5.7011719 C 25.749592 5.8755301 24.6828 6 23.5 6 C 22.3172 6 21.250407 5.8755301 20.554688 5.7011719 C 20.314506 5.6409786 20.204169 5.584136 20.076172 5.5292969 C 20.146431 4.8916798 20.410486 4.3144261 21.248047 4 z M 18.035156 6.0742188 C 18.120498 6.6352697 18.516501 6.9786494 18.841797 7.171875 C 19.206159 7.3883059 19.605673 7.5241791 20.070312 7.640625 C 20.999592 7.8735168 22.1828 8 23.5 8 C 24.8172 8 26.000407 7.8735168 26.929688 7.640625 C 27.394327 7.5241791 27.793841 7.3883059 28.158203 7.171875 C 28.483499 6.9786494 28.879502 6.6352697 28.964844 6.0742188 C 32.381051 6.5430434 35 9.4511148 35 13 L 35 15.314453 C 34.244641 15.57807 32.661791 16 30 16 C 27.055556 16 25.398204 15.759901 24.054688 15.515625 C 22.711171 15.271349 21.611111 15 20 15 C 16.698375 15 14 17.698375 14 21 L 14 26 C 14 29.301625 16.698375 32 20 32 L 37 32 L 37 33.636719 C 36.688566 33.767995 36.184032 33.952236 35.287109 34.148438 C 33.389078 34.563631 29.951389 35 24 35 C 22.355997 35 20.916942 34.888595 19.662109 34.705078 C 19.570279 34.691708 19.489609 34.734662 19.398438 34.726562 A 1.0001 1.0001 0 0 0 18.462891 34.800781 C 16.008223 35.06851 14 37.077475 14 39.660156 L 14 39.707031 C 14 42.390954 15.823594 44.659797 18.351562 45.392578 A 1.0001 1.0001 0 0 0 19.033203 45.630859 C 19.034703 45.631094 19.035609 45.632512 19.037109 45.632812 C 20.474214 45.861542 22.119847 46 24 46 C 24.279511 46 24.438655 45.973473 24.707031 45.970703 A 1.0001 1.0001 0 0 0 25.367188 45.943359 C 27.553048 45.899289 29.356473 45.788796 30.814453 45.615234 A 1.0001 1.0001 0 0 0 30.816406 45.615234 A 1.0001 1.0001 0 0 0 31.441406 45.527344 C 32.16887 45.428044 33.025196 45.339492 33.570312 45.230469 C 34.439074 45.056716 34.380668 45.009021 34.851562 44.857422 A 1.0001 1.0001 0 0 0 35 44.871094 L 35 46.759766 C 34.767715 46.858046 34.560173 46.993434 33.179688 47.269531 C 31.380116 47.629445 28.444444 48 24 48 C 19.133333 48 16.048194 47.030933 14.197266 46.105469 C 12.500509 45.25709 12.088248 44.658064 12 44.542969 L 12 13 C 12 9.4511148 14.618949 6.5430434 18.035156 6.0742188 z M 20 17 C 21.388889 17 22.288829 17.228651 23.695312 17.484375 C 25.101796 17.740099 26.944444 18 30 18 C 33.495974 18 35.304681 17.322825 35.912109 17.072266 L 38.662109 18.435547 A 1.0001 1.0001 0 0 0 38.755859 18.476562 C 39.832272 18.8801 40.69496 19.632974 41.263672 20.570312 C 40.580267 20.218229 39.817778 20 39 20 L 24 20 C 21.250484 20 19 22.250484 19 25 L 19 27 C 19 28.127936 19.392748 29.160943 20.029297 30 L 20 30 C 17.779625 30 16 28.220375 16 26 L 16 21 C 16 18.779625 17.779625 17 20 17 z M 24 22 L 25 22 C 26.544092 22 27.85983 22.86962 28.527344 24.140625 A 1.0001 1.0001 0 0 0 28.705078 24.492188 C 28.892912 24.957201 29 25.465114 29 26 C 29 26.534886 28.892912 27.042799 28.705078 27.507812 A 1.0001 1.0001 0 0 0 28.527344 27.859375 C 27.85983 29.13038 26.544092 30 25 30 L 24 30 C 22.331516 30 21 28.668484 21 27 L 21.5 27 C 21.776 27 22 26.776 22 26.5 L 22 25.5 C 22 25.224 21.776 25 21.5 25 L 21 25 C 21 23.331516 22.331516 22 24 22 z M 34 22 C 36.220375 22 38 23.779625 38 26 C 38 28.220375 36.220375 30 34 30 C 32.556481 30 31.317929 29.233131 30.615234 28.089844 C 30.859819 27.437465 31 26.735384 31 26 C 31 25.264616 30.859819 24.562535 30.615234 23.910156 C 31.317929 22.766869 32.556481 22 34 22 z M 38.455078 22 L 39 22 C 40.668484 22 42 23.331516 42 25 L 42 27 C 42 28.668484 40.668484 30 39 30 L 38.455078 30 C 39.411613 28.936212 40 27.535504 40 26 C 40 24.464496 39.411613 23.063788 38.455078 22 z M 32.5 25 C 32.224 25 32 25.224 32 25.5 L 32 26.5 C 32 26.776 32.224 27 32.5 27 L 33.5 27 C 33.776 27 34 26.776 34 26.5 L 34 25.5 C 34 25.224 33.776 25 33.5 25 L 32.5 25 z M 34 36.34375 L 34 43.039062 C 33.643823 43.139876 33.801941 43.14508 33.179688 43.269531 C 32.884639 43.328541 32.357733 43.375687 32 43.433594 L 32 36.628906 C 32.805599 36.545146 33.380115 36.443242 34 36.34375 z M 20 36.726562 C 21.215378 36.878507 22.500962 37 24 37 L 24 44 C 22.466691 44 21.193466 43.866804 20 43.705078 L 20 36.726562 z M 30 36.773438 L 30 43.710938 C 28.910113 43.822704 27.483831 43.87228 26 43.917969 L 26 36.923828 C 27.469471 36.893358 28.858489 36.852167 30 36.773438 z M 18 36.833984 L 18 43.179688 C 16.791137 42.485844 16 41.180231 16 39.707031 L 16 39.660156 C 16 38.327672 16.849736 37.236661 18 36.833984 z">
+                    </path>
+                </svg></span>
+            <span class="chatbot-pulse"></span>
+        </button>
+        <div class="chatbot-tooltip" data-i18n="chatbot.tooltip">¿DUDAS? HABLA CONMIGO</div>
+    </div>
+
+    <!-- Badge Generator Modal -->
+    <div class="badge-modal-overlay" id="badge-modal">
+        <div class="badge-modal-content">
+            <button class="badge-modal-close" id="close-badge-modal">✕</button>
+
+            <div class="badge-editor">
+                <h3 data-i18n="badge.title">Crea tu Pase de Acceso</h3>
+                <p data-i18n="badge.subtitle">Personaliza tu credencial oficial del congreso.</p>
+
+                <div class="badge-form">
+                    <div class="form-group">
+                        <label data-i18n="badge.name.label">Tu Nombre Completo</label>
+                        <input type="text" id="badge-name-input" placeholder="Ej. Juan Pérez" maxlength="25"
+                            data-i18n="badge.name.placeholder">
+                    </div>
+
+                    <div class="form-group">
+                        <label data-i18n="badge.role.label">Rol en el Evento</label>
+                        <select id="badge-role-input">
+                            <option value="ESTUDIANTE" data-i18n="badge.role.student">Estudiante</option>
+                            <option value="DOCENTE" data-i18n="badge.role.teacher">Docente</option>
+                            <option value="INVITADO VIP" data-i18n="badge.role.guest">Invitado VIP</option>
+                            <option value="PONENTE" data-i18n="badge.role.speaker">Ponente</option>
+                        </select>
+                    </div>
+
+                    <button class="liquid-btn primary full-width" id="download-badge-btn" data-i18n="badge.download">
+                        Descargar Pase (Imagen)
+                    </button>
+                </div>
+            </div>
+
+            <div class="badge-preview-container">
+                <div class="virtual-badge" id="virtual-badge">
+                    <div class="badge-header">
+                        <img src="logocongreso.png" alt="Logo Congreso" class="badge-logo-icon"
+                            style="width: 40px; height: 40px; object-fit: contain; filter: brightness(0) saturate(100%) invert(86%) sepia(21%) saturate(996%) hue-rotate(357deg) brightness(107%) contrast(104%);">
+                        <div class="badge-event-name" data-i18n="badge.congress.title">VII CONGRESO<br>CBTa 197
+                        </div>
+                    </div>
+
+                    <div class="badge-body">
+                        <div class="badge-photo-placeholder">
+                            <span class="initials" id="badge-initials">JP</span>
+                            <div class="holo-effect"></div>
+                        </div>
+
+                        <div class="badge-info">
+                            <h2 class="user-name" id="badge-name-display">Juan Pérez</h2>
+                            <div class="user-role" id="badge-role-display">ESTUDIANTE</div>
+                        </div>
+
+                        <div class="badge-qrcode">
+                            <!-- SVG QR Code simplificado -->
+                            <svg viewBox="0 0 100 100" fill="currentColor">
+                                <path
+                                    d="M0,0 h40 v40 h-40 z M10,10 v20 h20 v-20 z M60,0 h40 v40 h-40 z M70,10 v20 h20 v-20 z M0,60 h40 v40 h-40 z M10,70 v20 h20 v-20 z M50,50 h10 v10 h-10 z M70,70 h10 v10 h-10 z M50,80 h10 v10 h-10 z M80,50 h10 v10 h-10 z" />
+                            </svg>
+                        </div>
+                        <div class="badge-id">ID: <span id="badge-random-id">MX-2026-8392</span></div>
+                    </div>
+
+                    <div class="badge-footer">
+                        <div class="footer-strip"></div>
+                        <span>CBTA 197 • STEAM</span>
+                    </div>
+
+                    <div class="badge-shine"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="https://html2canvas.hertzen.com/dist/html2canvas.min.js"></script>
+    <script src="translations.js?v=3"></script>
+    <script src="webgl-shader.js"></script>
+    <script src="scroll-animations.js"></script>
+    <script src="gradual-blur.js"></script>
+    <script src="immersive-audio.js"></script>
+    <script src="events.js?v=3"></script>
+    <script>
+        // Initialize GradualBlur for the entire page
+        document.addEventListener('DOMContentLoaded', () => {
+            // Bottom Page Blur Only - Reduced height
+            new GradualBlur(document.body, {
+                target: 'page',      // Fixed to viewport
+                position: 'bottom',
+                height: '6rem',      // Reduced from 12rem
+                strength: 3,
+                divCount: 8,
+                exponential: true,
+                curve: 'bezier',
+                zIndex: 10           // Just above content, below UI
+            });
+        });
+    </script>
+    <script src="chatbot.js"></script>
+
+    <!-- Gallery Scripts -->
+    <link rel="stylesheet" href="circular-gallery.css">
+    <script src="circular-gallery.js"></script>
+    <script src="gallery-shader.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const speakerItems = [
+                { name: 'Patricia Escabias Prieto', role: 'España • Master en Diseño UX/UI', roleKey: 'gallery.patricia.role', topic: 'Minecraft Education en el Aula de Ciencias', topicKey: 'gallery.patricia.topic', image: 'patricia.png' },
+                { name: 'William Castillo Toloza', role: 'Colombia • Investigador IA', roleKey: 'gallery.william.role', topic: 'Investigación potenciada con Inteligencia Artificial', topicKey: 'gallery.william.topic', image: 'william.png' },
+                { name: 'Deylin Hernández Peña', role: 'Panamá • Innovación Educativa', roleKey: 'gallery.deylin.role', topic: 'Artes en la Ciencia: El Pensamiento Artístico', topicKey: 'gallery.deylin.topic', image: 'deylin.png' },
+                { name: 'Roxana de León', role: 'México • Doctora en Ciencias', roleKey: 'gallery.roxana.role', topic: 'Cultura Científica para la Toma de Decisiones', topicKey: 'gallery.roxana.topic', image: 'roxana.png' },
+                { name: 'Jesús Gabriel Félix Mendívil', role: 'México • Innovación 3D', roleKey: 'gallery.gabriel.role', topic: 'Diseño 3D e Innovación en el Aula', topicKey: 'gallery.gabriel.topic', image: 'gabriel.png' },
+                { name: 'Dora González', role: 'México • Especialista STEAM', roleKey: 'gallery.dora.role', topic: 'Simulaciones Interactivas con Phet', topicKey: 'gallery.dora.topic', image: 'dora.png', pos: 'center 30%' },
+                { name: 'Antonio Quirarte', role: 'México • Especialista en Tecnología', roleKey: 'gallery.antonio.role', topic: 'Liderazgo Pedagógico en la Nueva Escuela', topicKey: 'gallery.antonio.topic', image: 'antonio.png?v=1' }
+            ];
+
+            // Initialize Background Shader first
+            const galleryBg = new GalleryShaderBackground('gallery-bg-canvas');
+
+            // Initialize 3D Gallery and pass background
+            new CircularGallery('circular-gallery-container', speakerItems, {
+                radius: 450,
+                autoRotateSpeed: 0.05,
+                background: galleryBg
+            });
+        });
+    </script>
+    <script>
+        // REVISIÓN INMEDIATA
+        const yaEntro = localStorage.getItem('form_completado') === 'true';
+
+        if (yaEntro) {
+            document.write('<style>#intro-overlay, #welcome-portal { display: none !important; }</style>');
+            document.documentElement.style.overflow = 'visible';
+            document.body.style.overflow = 'visible';
+        }
+
+        function loadScript(src) {
+            const s = document.createElement('script');
+            s.src = src;
+            document.body.appendChild(s);
+        }
+
+        // Cargamos los scripts necesarios una sola vez
+        if (!yaEntro) {
+            loadScript('CHOREOGRAPHY.JS');
+        }
+        // events.js removed from duplicate loading
+        loadScript('chatbot.js'); // Aseguramos que se cargue
+    </script>
+
+
+    <script id="logic-checker">
+        (function () {
+            const yaCompleto = localStorage.getItem('form_completado') === 'true';
+            const overlay = document.getElementById('intro-overlay');
+            const portal = document.getElementById('welcome-portal');
+
+            if (yaCompleto) {
+                if (overlay) overlay.remove();
+                if (portal) portal.remove();
+                document.body.style.setProperty('overflow', 'visible', 'important');
+                document.documentElement.style.setProperty('overflow', 'visible', 'important');
+            }
+        })();
+    </script>
+    <div id="welcome-portal" class="portal-overlay hidden-initial">
+        <div id="onboarding-step" class="portal-content">
+            <div class="portal-header">
+                <span class="portal-subtitle">CONGRESO 2026</span>
+                <h1 class="portal-title">Personaliza tu Experiencia</h1>
+            </div>
+
+            <form id="onboarding-form" class="portal-form">
+                <div class="input-group">
+                    <input type="text" id="user-name" required placeholder=" ">
+                    <label data-i18n="portal.name">Primer Nombre</label>
+                    <div class="input-bar"></div>
+                </div>
+
+                <div class="selection-row">
+                    <div class="select-wrapper">
+                        <label data-i18n="portal.lang">Idioma</label>
+                        <select id="user-lang">
+                            <option value="es">Español</option>
+                            <option value="en">English</option>
+                        </select>
+                    </div>
+
+                    <div class="toggle-wrapper">
+                        <label data-i18n="portal.sound">Sonido Inmersivo</label>
+                        <button type="button" id="sound-toggle" class="custom-toggle">
+                            <span class="toggle-knob"></span>
+                        </button>
+                    </div>
+                </div>
+
+                <button type="submit" class="portal-btn-primary">
+                    <span data-i18n="portal.btn">COMENZAR EXPERIENCIA</span>
+                    <div class="btn-glow"></div>
+                </button>
+            </form>
+        </div>
+
+        <div id="loading-step" class="portal-content hidden">
+            <div class="logo-loader-container">
+                <div class="congress-logo-placeholder">
+                    <div class="logo-glow"></div>
+                    <div class="logo-inner">
+                        <img src="LOGOCNG.png" alt="Congreso" class="placeholder-text">
+
+                    </div>
+                </div>
+                <div class="loading-bar-wrapper">
+                    <div class="loading-bar-progress"></div>
+                </div>
+                <p class="loading-status" data-i18n="portal.loading">Sincronizando frecuencias...</p>
+            </div>
+        </div>
+    </div>
+
+    <audio id="audioHola" src="HOLABENDER.mp3"></audio>
+    <audio id="audioPregunta" src="PREGUNTABENDER.mp3"></audio>
+    <audio id="audioAdios" src="ADIOSBENDER.mp3"></audio>
+</body>
+
+
+</html>

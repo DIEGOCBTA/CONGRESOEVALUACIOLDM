@@ -1,0 +1,41 @@
+/* GradualBlur CSS match */
+
+.gradual-blur {
+    /* pointer-events: none; - moved to JS logic based on config, but default is usually safe */
+    transition: opacity 0.3s ease-out;
+    isolation: isolate;
+    overflow: hidden;
+    /* Important for containment */
+}
+
+.gradual-blur-inner {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    /* Inner divs shouldn't block */
+}
+
+.gradual-blur-inner>div {
+    /* Inherit logic handled inline, but good to have base */
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+}
+
+.gradual-blur-fixed {
+    position: fixed !important;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    pointer-events: none;
+    z-index: 1000;
+}
+
+@supports not (backdrop-filter: blur(1px)) {
+    .gradual-blur-inner>div {
+        background: rgba(0, 0, 0, 0.3);
+        opacity: 0.5;
+    }
+}
