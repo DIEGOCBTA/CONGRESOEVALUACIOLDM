@@ -4,15 +4,11 @@
  */
 
 // --- CONFIGURACIÓN CLAVE ---
-// Esta es la ruta a TU servidor (el que crearemos en el siguiente paso).
-// Si tu web y el servidor están en el mismo dominio, deja '/api/chat'.
-// Si usas un servidor externo (como Render), pon la URL completa: 'https://mi-backend.com/api/chat'
-
-let API_URL = 'chat.php'; // Por defecto (HostGator)
+// Esta es la ruta a TU servidor.
+let API_URL = '/api/chat'; // Por defecto para Render o cualqueir Node.js
 if (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') {
+    // Para probar localmente si usas LIVE SERVER en otro puerto
     API_URL = 'http://localhost:3005/api/chat';
-} else if (window.location.hostname.includes('onrender.com') || window.location.hostname.includes('render')) {
-    API_URL = '/api/chat'; // Para Render (Express)
 }
 
 // Configuración general
