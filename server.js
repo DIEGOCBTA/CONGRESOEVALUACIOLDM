@@ -78,8 +78,8 @@ ${CONGRESS_INFO}
 // --- PARTE DE LA IA (BENDER) ---
 if (!process.env.GEMINI_API_KEY) console.log("⚠️ OJO: Reviso tu archivo .ENV");
 const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY || "");
-// Usamos gemini-1.5-flash
-const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
+// Usamos gemini-2.5-flash
+const model = genAI.getGenerativeModel({ model: "gemini-2.5-flash" });
 
 app.post('/api/chat', async (req, res) => {
     console.log("📩 Recibido mensaje:", req.body.message);
