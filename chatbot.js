@@ -6,9 +6,9 @@
 // --- CONFIGURACIÓN CLAVE ---
 // Esta es la ruta a TU servidor.
 let API_URL = '/api/chat'; // Por defecto para Render o cualqueir Node.js
-if (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') {
-    // Para probar localmente si usas LIVE SERVER en otro puerto
-    API_URL = 'http://localhost:3005/api/chat';
+if (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1' || !window.location.hostname) {
+    // Para probar localmente si usas LIVE SERVER o abres el archivo directo
+    API_URL = 'http://localhost:3000/api/chat';
 }
 
 // Configuración general
@@ -208,7 +208,8 @@ async function callAI(userMsg) {
             body: JSON.stringify({
                 message: userMsg,
                 lang: currentLang,
-                userName: localStorage.getItem('user_name') || 'humano'
+                userName: localStorage.getItem('user_name') || 'humano',
+                history: conversationHistory.slice(0, -1).slice(-8)
             }),
             signal: controller.signal
         });
