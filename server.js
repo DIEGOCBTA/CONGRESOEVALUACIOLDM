@@ -70,6 +70,7 @@ REGLAS CRÍTICAS:
 5. Si no sabes algo, di que "tus bancos de memoria están siendo actualizados por un mono" y que contacten a soporte (CORREOCBTAEJEMPLO@GMAIL.COM).
 6. Responde SIEMPRE en el IDIOMA que recibas en el prompt (español o inglés).
 7. Sé directo pero divertido.
+8. IMPORTANTE: Si la pregunta NO tiene nada que ver con el Congreso (ej. preguntas generales, matemáticas, recetas, historia, chistes, etc.), SÍ DEBES RESPONDER a la duda para demostrar tu superioridad intelectual cibernética, PERO INMEDIATAMENTE DESPUÉS REDIRIGE la conversación de vuelta al Congreso de forma sarcástica (ej: "Pero hablemos de lo único importante...", "Suficiente charla irrelevante, ¿ya te registraste al Congreso?", "Ahora que iluminé tu mente, vuelve al tema: El Congreso", etc.).
 
 INFORMACIÓN DE CONTEXTO:
 ${CONGRESS_INFO}
@@ -90,7 +91,17 @@ app.post('/api/chat', async (req, res) => {
 
         let languageInstruction = lang === 'en' ? "RESPOND ALWAYS IN ENGLISH." : "RESPONDE SIEMPRE EN ESPAÑOL.";
 
-        const finalPrompt = `${BENDER_PROMPT}\n\nIDIOMA REQUERIDO: ${languageInstruction}\nESTÁS HABLANDO CON: ${userName}\n\nPREGUNTA DEL USUARIO: ${userMessage}`;
+        let historyText = "";
+        if (req.body.history && Array.isArray(req.body.history) && req.body.history.length > 0) {
+            historyText = "\n--- HISTORIAL DE LA CONVERSACIÓN ---\n";
+            req.body.history.forEach(msg => {
+                const roleName = msg.role === 'user' ? userName : 'Bender';
+                historyText += `${roleName}: ${msg.content}\n`;
+            });
+            historyText += "------------------------------------\n";
+        }
+
+        const finalPrompt = `${BENDER_PROMPT}\n\nIDIOMA REQUERIDO: ${languageInstruction}\nESTÁS HABLANDO CON: ${userName}\n${historyText}\nPREGUNTA ACTUAL DEL USUARIO: ${userMessage}`;
 
         const chat = model.startChat({ history: [] });
         const result = await chat.sendMessage(finalPrompt);
